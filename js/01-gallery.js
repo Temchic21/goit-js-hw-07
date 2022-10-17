@@ -1,15 +1,10 @@
 import { galleryItems } from "./gallery-items.js";
 
 const galleryList = document.querySelector(".gallery");
-const galleryImage = document.querySelectorAll(".gallery__image");
 const galleryMarkup = createGallerySmallPictureCard(galleryItems);
 let instance;
-
 galleryList.innerHTML = galleryMarkup;
-
 galleryList.addEventListener("click", onGalleryImageClick);
-
-
 function createGallerySmallPictureCard(galleryItems) {
   return galleryItems
     .map(({ preview, original, description }) => {
@@ -26,28 +21,16 @@ function createGallerySmallPictureCard(galleryItems) {
     })
     .join("");
 }
-
 function onGalleryImageClick(e) {
   e.preventDefault();
-
-  
-  galleryImage.src = e.target.dataset.source;
-
-  instance = basicLightbox.create(`<img src="${galleryImage.src}">`);
-  onModalImageOpen(instance);
-}
-
-function onModalImageOpen(e) {
-  window.addEventListener("keydown", onEscKeyPress);
-  e.show();
-}
-function onModalImageClose(e) {
-  window.removeEventListener("keydown", onEscKeyPress);
-  e.close();
-}
-
-function onEscKeyPress(e) {
-  if (e.code === "Escape") {
-    onModalImageClose(instance);
+  let galleryImages = e.target.dataset.source;
+  instance = basicLightbox.create(`<img src="${galleryImages}" width="800" height="600">`);
+  instance.show();
+  galleryList.addEventListener("keydown", onEscKeyPress);
+  function onEscKeyPress(e) {
+    if (e.key === "Escape") {
+      instance.close(() => console.log(""));
+      galleryList.removeEventListener("keydown", onEscKeyPress);
+    }
   }
-}
+};
